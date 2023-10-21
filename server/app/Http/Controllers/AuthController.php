@@ -10,11 +10,20 @@ class AuthController extends Controller
 {
     public function signup(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required',
-            'email' => 'required|email',
-            'password' => 'required|min:6',
-        ]);
+        
+    $validatedData = $request->validate([
+        'name' => 'required|unique:users',
+        'email' => 'required|email|unique:users',
+        'password' => 'required|min:6',
+    ], [
+        'name.required' => 'User name is required.',
+        'email.required' => 'Email is required.',
+        'email.email' => 'Please enter a valid email address.',
+        'email.unique' => 'This email is already registered.',
+        'name.unique' => 'This name is taken.',
+        'password.required' => 'Password is required.',
+        'password.min' => 'The password must be at least 6 characters.',
+    ]);
 
         $name = $validatedData['name'];
         $email = $validatedData['email'];

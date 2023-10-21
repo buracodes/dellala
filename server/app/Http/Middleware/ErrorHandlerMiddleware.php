@@ -18,7 +18,9 @@ class ErrorHandlerMiddleware
         $response = $next($request);
 
         if ($response->exception) {
-            $statusCode = $response->exception->getStatusCode() ?? 500;
+            $statusCode = method_exists($response->exception, 'getStatusCode')
+            ? $response->exception->getStatusCode()
+            : 500;
             $message = $response->exception->getMessage() ?? 'Internal Server Error';
 
             return response()->json([
