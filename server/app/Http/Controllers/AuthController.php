@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request; 
 use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Cookie;
+use Validator;
 
 class AuthController extends Controller
 {
@@ -43,4 +46,44 @@ class AuthController extends Controller
             return response()->json($error->getMessage(), 500);
         }
     }
+
+    
+public function signin(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'email' => 'required|email',
+        'password' => 'required|min:6',
+    ], [
+        'email.required' => 'Email is required.',
+        'email.email' => 'Please enter a valid email address.',
+        'password.required' => 'Password is required.',
+        'password.min' => 'Password must be at least 6 characters.',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json(['error' => $validator->errors()], 422);
+    }
+
+    $user = User::where('email', $request->input('email'))->first();
+
+    if (!$user) {
+        return response()->json(['error' => 'User not found'], 404);
+    }
+
+    if (!Hash::check($request->input('password'), $user->password)) {
+        return response()->json(['error' => "Password is not correct"], 401);
+    }
+
+    $token = JWTAuth::fromUser($user);
+    
+    $response = response()->json([
+        'user' => $user,
+        'access_token' => $token
+    ]);
+
+    // Set a cookie named 'access_token' with the JWT token as the value and a 60-minute expiration time
+    $response->withCookie(Cookie::make('access_token', $token, 60));
+
+    return $response;
+}
 }
