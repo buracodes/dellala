@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Str;
+use Firebase\JWT\JWT;
 use Validator;
 
 class AuthController extends Controller
@@ -77,8 +79,9 @@ if (!Hash::check($request->input('password'), $user->password)) {
 
     $response = response()->json([
             'id' => $user->id,
-            'email' => $user->email,
             'name' => $user->name,
+            'email' => $user->email,
+            'avatar' => $user->avatar,
             'access_token' => $token
     ]);
 
@@ -89,7 +92,40 @@ if (!Hash::check($request->input('password'), $user->password)) {
 }catch (\Exception $error) {
     return response()->json(['error' => $error->getMessage()], 500);
 }
-
 }
 
+public function google(Request $request)
+{
+    try {
+        $user = User::where('email', $request->input('email'))->first();
+
+        if ($user) {
+            $token = JWTAuth::fromUser($user);
+            $rest = collect($user)->except('password')->toArray();
+
+            return response()
+                ->json($rest)
+                ->cookie('access_token', $token, 0, '/', null, false, true); // Set the cookie with the token
+        } else {
+            $generatedPassword = Str::random(8) . Str::random(8);
+            $hashedPassword = Hash::make($generatedPassword);
+            $newUser = new User();
+            $newUser->name = Str::slug(str_replace(' ', '', $request->input('name')), '') . Str::random(4);
+            $newUser->email = $request->input('email');
+            $newUser->password = $hashedPassword;
+            $newUser->avatar = $request->input('photo');
+            $newUser->save();
+
+            $token = JWTAuth::fromUser($newUser);
+            $rest = collect($newUser)->except('password')->toArray();
+
+            return response()
+            ->json($rest)
+            ->cookie('access_token', $token, 0, '/', null, false, true)
+            ->header('Content-Type', 'application/json'); // Set the cookie with the token
+        }
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+}
 }
