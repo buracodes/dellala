@@ -14,7 +14,7 @@ class AuthController extends Controller
     public function signup(Request $request)
     {
         
-    $validatedData = $request->validate([
+    $val = $request->validate([
         'name' => 'required|unique:users',
         'email' => 'required|email|unique:users',
         'password' => 'required|min:6',
@@ -22,35 +22,38 @@ class AuthController extends Controller
         'name.required' => 'User name is required.',
         'email.required' => 'Email is required.',
         'email.email' => 'Please enter a valid email address.',
-        'email.unique' => 'This email is already registered.',
-        'name.unique' => 'This name is taken.',
+        'email.unique' => 'Email is already registered.',
+        'name.unique' => 'Username is taken.',
         'password.required' => 'Password is required.',
         'password.min' => 'The password must be at least 6 characters.',
     ]);
 
-        $name = $validatedData['name'];
-        $email = $validatedData['email'];
-        $password = $validatedData['password'];
+        $name = $val['name'];
+        $email = $val['email'];
+        $password = $val['password'];
 
-        $hashedPassword = Hash::make($password);
+        $hpw= Hash::make($password);
 
         try {
             $user = new User();
             $user->name = $name;
             $user->email = $email;
-            $user->password = $hashedPassword;
+            $user->password = $hpw;
             $user->save();
 
             return response()->json('User created successfully!', 201);
-        } catch (\Exception $error) {
-            return response()->json($error->getMessage(), 500);
+        } catch (error) {
+            return response()->json(error->getMessage(), 500);
         }
     }
 
     
+ 
 public function signin(Request $request)
 {
-    $validator = Validator::make($request->all(), [
+    try{
+
+    $valid =  $request->validate([
         'email' => 'required|email',
         'password' => 'required|min:6',
     ], [
@@ -60,22 +63,18 @@ public function signin(Request $request)
         'password.min' => 'Password must be at least 6 characters.',
     ]);
 
-    if ($validator->fails()) {
-        return response()->json(['error' => $validator->errors()], 422);
-    }
-
     $user = User::where('email', $request->input('email'))->first();
 
     if (!$user) {
-        return response()->json(['error' => 'User not found'], 404);
+        return response()->json(['success' => false, 'error' => 'User not found'], 404);
     }
-
-    if (!Hash::check($request->input('password'), $user->password)) {
-        return response()->json(['error' => "Password is not correct"], 401);
-    }
+   
+if (!Hash::check($request->input('password'), $user->password)) {
+    return response()->json(['success' => false, 'error' => "Password is not correct"], 401);
+}
 
     $token = JWTAuth::fromUser($user);
-    
+
     $response = response()->json([
         'user' => $user,
         'access_token' => $token
@@ -85,5 +84,10 @@ public function signin(Request $request)
     $response->withCookie(Cookie::make('access_token', $token, 60));
 
     return $response;
+}catch (\Exception $error) {
+    return response()->json(['error' => $error->getMessage()], 500);
 }
+
+}
+
 }
