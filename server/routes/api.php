@@ -4,7 +4,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-
+use App\Http\Controllers\UserController;
+use App\Http\Middleware\VerifyTokenMiddleware;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -17,10 +18,10 @@ use App\Http\Controllers\AuthController;
 */
 
 
+
 Route::post('signup',[AuthController::class,'signup']);
 Route::post('signin',[AuthController::class,'signin']);
 Route::post('google',[AuthController::class,'google']);
 
-Route::middleware('jwt.auth')->get('/user', function (Request $request) {
-    return auth()->user();
-});
+Route::post('/update/{id}', [UserController::class, 'update'])->middleware('token.verify');
+

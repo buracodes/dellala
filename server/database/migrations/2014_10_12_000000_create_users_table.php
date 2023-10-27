@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('avatar')->default("https://winaero.com/blog/wp-content/uploads/2015/05/user-200.png");
+            $table->string('avatar')->default("https://www.tenforums.com/geek/gars/images/2/types/thumb_15951118880user.png");
             $table->rememberToken();
             $table->timestamps();
         });
