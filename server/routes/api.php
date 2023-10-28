@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\VerifyTokenMiddleware;
+use App\Http\Controllers\ListingController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -26,3 +27,4 @@ Route::post('google',[AuthController::class,'google']);
 Route::post('/update/{id}', [UserController::class, 'update'])->middleware('token.verify');
 Route::delete('/delete/{id}', [UserController::class, 'delete'])->middleware('token.verify');
 Route::get('signout', [UserController::class, 'signOut']);
+Route::post('create', [ListingController::class, 'create']);
