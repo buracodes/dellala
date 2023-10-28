@@ -86,7 +86,7 @@ if (!Hash::check($request->input('password'), $user->password)) {
     ]);
 
     // Set a cookie named 'access_token' with the JWT token as the value and a 60-minute expiration time
-    $response->withCookie(Cookie::make('access_token', $token, 60));
+    $response->cookie('access_token', $token, 60);
 
     return $response;
 }catch (\Exception $error) {

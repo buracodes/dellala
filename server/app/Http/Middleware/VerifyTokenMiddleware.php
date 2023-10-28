@@ -5,8 +5,9 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
-use JWTAuth;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use Exception;
+
 
 class VerifyTokenMiddleware
 {
@@ -19,9 +20,12 @@ class VerifyTokenMiddleware
         }
 
         try {
-            $user = JWTAuth::setToken($token)->authenticate();
-            Auth::setUser($user);
-        } catch (Exception $e) {
+            $user = JWTAuth::setToken($token)->toUser();
+            if (!$user) {
+                throw new \Exception('User not found');
+            }
+            Auth::login($user);
+        } catch (\Exception $e) {
             return response()->json(['error' => 'Forbidden'], 403);
         }
 
