@@ -13,14 +13,14 @@ class ErrorHandlerMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next)
     {
         $response = $next($request);
 
         if ($response->exception) {
             $statusCode = method_exists($response->exception, 'getStatusCode')
-            ? $response->exception->getStatusCode()
-            : 500;
+                ? $response->exception->getStatusCode()
+                : 500;
             $message = $response->exception->getMessage() ?? 'Internal Server Error';
 
             return response()->json([

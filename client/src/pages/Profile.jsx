@@ -71,20 +71,22 @@ export default function Profile() {
     e.preventDefault();
     try {
       dispatch(updateUserStart());
-      console.log(currentUser._id);
-      const res = await fetch(`http://localhost:8000/api/update/${currentUser._id}`, {
+      
+      const res = await fetch(`http://localhost:8000/api/update/${currentUser.id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
       });
+  
       const data = await res.json();
-      if (data.success === false) {
-        dispatch(updateUserFailure(data.message));
+  
+      if (!res.ok) {
+        dispatch(updateUserFailure(data.error || 'Failed to update user'));
         return;
       }
-
+  
       dispatch(updateUserSuccess(data));
       setUpdateSuccess(true);
     } catch (error) {
@@ -92,10 +94,11 @@ export default function Profile() {
     }
   };
 
- const handleDelete= async (dispatch) => {
+  const handleDelete = async () => {
     try {
       dispatch(deleteUserStart());
-      const res = await fetch(`http://localhost:8000/api/delete/${currentUser._id}`, {
+  
+      const res = await fetch(`http://localhost:8000/api/delete/${currentUser.id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

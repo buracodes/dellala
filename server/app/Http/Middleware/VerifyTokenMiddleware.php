@@ -3,30 +3,33 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cookie;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use JWTAuth;
 use Exception;
+use Tymon\JWTAuth\Http\Middleware\BaseMiddleware;
 
-
-class VerifyTokenMiddleware
+class VerifyTokenMiddleware extends BaseMiddleware
 {
     public function handle($request, Closure $next)
     {
-        $token = $request->cookie('access_token');
-
-        if (!$token) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
-
         try {
-            $user = JWTAuth::setToken($token)->toUser();
-            if (!$user) {
-                throw new \Exception('User not found');
+            $token = $request->cookie('access_token'); // Retrieve the token from the access_token cookie
+
+            if (!$token) {
+                throw new Exception('Token not provided');
             }
-            Auth::login($user);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Forbidden'], 403);
+
+            // Verify the token
+            $user = JWTAuth::setToken($token)->authenticate();
+
+            if (!$user) {
+                throw new Exception('User not found');
+            }
+
+            // Attach the authenticated user to the request
+            $request->merge(['user' => $user]);
+
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 401);
         }
 
         return $next($request);

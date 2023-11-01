@@ -9,6 +9,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Str;
 use Firebase\JWT\JWT;
+use Tymon\JWTAuth\Exceptions\JWTException;
 use Validator;
 
 class AuthController extends Controller
@@ -49,51 +50,46 @@ class AuthController extends Controller
         }
     }
 
+    public function signin(Request $request)
+    {
+        try {
+            $valid = $request->validate([
+                'email' => 'required|email',
+                'password' => 'required|min:6',
+            ], [
+                'email.required' => 'Email is required.',
+                'email.email' => 'Please enter a valid email address.',
+                'password.required' => 'Password is required.',
+                'password.min' => 'Password must be at least 6 characters.',
+            ]);
     
- 
-public function signin(Request $request)
-{
-    try{
-
-    $valid =  $request->validate([
-        'email' => 'required|email',
-        'password' => 'required|min:6',
-    ], [
-        'email.required' => 'Email is required.',
-        'email.email' => 'Please enter a valid email address.',
-        'password.required' => 'Password is required.',
-        'password.min' => 'Password must be at least 6 characters.',
-    ]);
-
-    $user = User::where('email', $request->input('email'))->first();
-
-    if (!$user) {
-        return response()->json(['success' => false, 'error' => 'User not found'], 404);
+            $user = User::where('email', $request->input('email'))->first();
+    
+            if (!$user) {
+                return response()->json(['success' => false, 'error' => 'User not found'], 404);
+            }
+    
+            if (!Hash::check($request->input('password'), $user->password)) {
+                return response()->json(['success' => false, 'error' => 'Password is not correct'], 401);
+            }
+    
+            $token = JWTAuth::fromUser($user);
+    
+            $response = response()->json([
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'avatar' => $user->avatar,
+            ]);
+    
+            $response->cookie('access_token', $token, 60, '/', null, true, true); // Set the access_token cookie
+    
+            return $response;
+    
+        } catch (\Exception $error) {
+            return response()->json(['error' => $error->getMessage()], 500);
+        }
     }
-   
-if (!Hash::check($request->input('password'), $user->password)) {
-    return response()->json(['success' => false, 'error' => "Password is not correct"], 401);
-}
-
-    $token = JWTAuth::fromUser($user);
-
-    $response = response()->json([
-            'id' => $user->id,
-            'name' => $user->name,
-            'email' => $user->email,
-            'avatar' => $user->avatar,
-            'access_token' => $token
-    ]);
-
-    // Set a cookie named 'access_token' with the JWT token as the value and a 60-minute expiration time
-    $response->cookie('access_token', $token, 60);
-
-    return $response;
-}catch (\Exception $error) {
-    return response()->json(['error' => $error->getMessage()], 500);
-}
-}
-
 public function google(Request $request)
 {
     try {

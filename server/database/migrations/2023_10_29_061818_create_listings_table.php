@@ -16,16 +16,16 @@ return new class extends Migration
             $table->string('name');
             $table->text('description');
             $table->string('address');
-            $table->decimal('regular_price', 8, 2);
-            $table->decimal('discount_price', 8, 2);
+            $table->decimal('regularPrice', 8, 2);
+            $table->decimal('discountPrice', 8, 2);
             $table->integer('bathrooms');
             $table->integer('bedrooms');
             $table->boolean('furnished');
             $table->boolean('parking');
             $table->string('type');
             $table->boolean('offer');
-            $table->json('image_urls');
-            $table->string('user_ref');
+            $table->json('imageUrls');
+            $table->integer('userRef');
             $table->timestamps();
         });
     }
