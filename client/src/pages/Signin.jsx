@@ -30,6 +30,7 @@ export default function SignIn() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
+        credentials: "include",     // include cookies in the request:
       });
       const data = await res.json();
       dispatch(signInFailure(data.message));

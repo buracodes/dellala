@@ -27,4 +27,6 @@ Route::post('google',[AuthController::class,'google']);
 Route::post('/update/{id}', [UserController::class, 'update'])->middleware('token.verify');
 Route::delete('/delete/{id}', [UserController::class, 'delete'])->middleware('token.verify');
 Route::get('signout', [UserController::class, 'signOut']);
+
 Route::post('create', [ListingController::class, 'create']);
+Route::get('getlistings/{id}', [ListingController::class, 'getlistings']);

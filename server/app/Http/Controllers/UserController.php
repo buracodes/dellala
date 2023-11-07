@@ -13,58 +13,64 @@ use Exception;
 
 
 
-
 class UserController extends Controller
 {
-   
-    public function update(Request $request, $id)
-    {
+
+      public function update(Request $request, $id)
+     {
         try {
             $user = Auth::user();
-
+    
             if ($user->id !== intval($id)) {
                 return response()->json(['error' => 'You can only update your own account!'], 401);
             }
-
+    
             if ($request->filled('password')) {
                 $request->merge(['password' => Hash::make($request->password)]);
+            } else {
+                $request->request->remove('password'); 
             }
-
+    
             $updated = User::findOrFail($id);
-
-            $updated->fill($request->only([
-                'name', 'email', 'password', 'avatar'
-            ]));
-
+    
+            $fillableData = $request->only(['name', 'email', 'password', 'avatar']);
+    
+            // if the password feild is not provided remove it from the fillable data
+            if (empty($fillableData['password'])) {
+                unset($fillableData['password']);
+            }
+    
+            $updated->fill($fillableData);
             $updated->save();
-
+    
             $response = $updated->toArray();
             unset($response['password']);
-
+    
             return response()->json($response);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
-
+    
     public function delete($id)
     {
+        $user = Auth::user();
+        
+        if ($user->id !== intval($id)) {
+            return response()->json(['error' => 'You can only update your own account!'], 401);
+        }
+        
         try {
-            $user = Auth::user();
-    
-            if ($user->id !== intval($id)) {
-                return response()->json(['error' => 'You can only delete your own account!'], 401);
-            }
-    
-            $deleted = User::findOrFail($id);
-            $deleted->delete();
-    
-            return response()->json(['message' => 'User has been deleted!'], 200);
+            $user = User::find($id);
+            $user->delete();
+            return response()->json(['message' => 'User has been deleted!'], 200)
+                             ->withCookie(Cookie::forget('access_token'));
         } catch (\Exception $error) {
             return response()->json(['error' => $error->getMessage()], 500);
         }
     }
+    
 
     public function signOut(Request $request)
     {

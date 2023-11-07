@@ -66,30 +66,24 @@ class AuthController extends Controller
             $user = User::where('email', $request->input('email'))->first();
     
             if (!$user) {
-                return response()->json(['success' => false, 'error' => 'User not found'], 404);
+                return response()->json(['error' => 'User not found'], 404);
             }
     
             if (!Hash::check($request->input('password'), $user->password)) {
-                return response()->json(['success' => false, 'error' => 'Password is not correct'], 401);
+                return response()->json(['error' => 'Password is not correct'], 401);
             }
     
             $token = JWTAuth::fromUser($user);
     
-            $response = response()->json([
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'avatar' => $user->avatar,
-            ]);
-    
-            $response->cookie('access_token', $token, 60, '/', null, true, true); // Set the access_token cookie
-    
-            return $response;
+       
+         return response()->json($user)
+              ->cookie('access_token', $token, 60, '/', null, true, false);
     
         } catch (\Exception $error) {
             return response()->json(['error' => $error->getMessage()], 500);
         }
     }
+    
 public function google(Request $request)
 {
     try {

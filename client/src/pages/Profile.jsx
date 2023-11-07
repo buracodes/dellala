@@ -78,10 +78,10 @@ export default function Profile() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
+        credentials: "include",
       });
   
       const data = await res.json();
-  
       if (!res.ok) {
         dispatch(updateUserFailure(data.error || 'Failed to update user'));
         return;
@@ -103,6 +103,7 @@ export default function Profile() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: "include",
       });
   
       if (!res.ok) {
@@ -120,7 +121,10 @@ export default function Profile() {
   const handleSignOut = async () => {
     try {
         dispatch(signOutUserStart());
-        const res = await fetch('http://localhost:8000/api/signout', { method: 'GET' });
+        const res = await fetch('http://localhost:8000/api/signout', { 
+          method: 'GET' ,
+          credentials: "include"}
+        );
         const data = await res.json();
         if (res.ok) {
             dispatch(deleteUserSuccess(data));
@@ -164,7 +168,7 @@ export default function Profile() {
         <input
           type='text'
           placeholder='username'
-          id='username'
+          id='name'
           defaultValue={currentUser.name}
           className='border p-3 rounded-lg'
           onChange={handleChange}
@@ -182,6 +186,7 @@ export default function Profile() {
           placeholder='password'
           id='password'
           className='border p-3 rounded-lg'
+          onChange={handleChange}
         />
        <button
           disabled={loading}
