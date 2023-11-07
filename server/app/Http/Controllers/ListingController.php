@@ -22,10 +22,11 @@ class ListingController extends Controller
     }
 
     public function getlistings(Request $request, $id)
-    {
-         $user = User::where('id', $request->input('id'))->first();
-    
-        if ($user && $id === $id) {
+{
+    $user = User::find($id); // Use find() to look up the user by ID.
+
+    if ($user) {
+        if ($user->id === $request->user()->id) {
             try {
                 $listings = Listing::where('userRef', $id)->get();
                 return response()->json($listings, 200);
@@ -35,5 +36,9 @@ class ListingController extends Controller
         } else {
             return response()->json(['error' => 'You can only view your own listings!'], 401);
         }
+    } else {
+        return response()->json(['error' => 'User not found.'], 404);
     }
+}
+
 }

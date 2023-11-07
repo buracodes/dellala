@@ -29,4 +29,4 @@ Route::delete('/delete/{id}', [UserController::class, 'delete'])->middleware('to
 Route::get('signout', [UserController::class, 'signOut']);
 
 Route::post('create', [ListingController::class, 'create']);
-Route::get('getlistings/{id}', [ListingController::class, 'getlistings']);
+Route::get('getlistings/{id}', [ListingController::class, 'getlistings'])->middleware('token.verify');
