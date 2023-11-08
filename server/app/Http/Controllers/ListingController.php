@@ -21,8 +21,9 @@ class ListingController extends Controller
         }
     }
 
+
     public function getlistings(Request $request, $id)
-{
+    {
     $user = User::find($id); // Use find() to look up the user by ID.
 
     if ($user) {
@@ -40,5 +41,25 @@ class ListingController extends Controller
         return response()->json(['error' => 'User not found.'], 404);
     }
 }
+
+public function deleteListing(Request $request, $id)
+    {
+        try {
+            $listing = Listing::find($id);
+
+            if (!$listing) {
+                return response()->json(['error' => 'Listing not found!'], 404);
+            }
+
+            if ($request->user()->id !== $listing->userRef) {
+                return response()->json(['error' => 'You can only delete your own listings!'], 401);
+            }
+
+            $listing->delete();
+            return response()->json(['message' => 'Listing has been deleted!'], 200);
+        } catch (\Exception $error) {
+            return response()->json(['error' => $error->getMessage()], 500);
+        }
+    }
 
 }
