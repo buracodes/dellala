@@ -62,4 +62,34 @@ public function deleteListing(Request $request, $id)
         }
     }
 
+    public function updateListing(Request $request, $id)
+{
+    try {
+        $listing = Listing::find($id);
+
+        if (!$listing) {
+            return response()->json(['error' => 'Listing not found!'], 404);
+        }
+
+        if ($request->user()->id !== $listing->userRef) {
+            return response()->json(['error' => 'You can only update your own listings!'], 401);
+        }
+
+        $listing->update($request->all()); // update the request 
+
+        if (!$listing->save()) {
+            return response()->json(['error' => 'Failed to update listing.'], 400);
+        }
+
+        // fetch the updated listing after the update
+        $updatedListing = Listing::find($id);
+
+        return response()->json($updatedListing, 200);
+    } catch (\Exception $error) {
+        return response()->json(['error' => $error->getMessage()], 500);
+    }
+}
+
+
+
 }

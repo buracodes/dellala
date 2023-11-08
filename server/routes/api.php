@@ -31,4 +31,5 @@ Route::get('signout', [UserController::class, 'signOut']);
 Route::post('create', [ListingController::class, 'create']);
 Route::get('getlistings/{id}', [ListingController::class, 'getlistings'])->middleware('token.verify');
 Route::delete('deleteListing/{id}', [ListingController::class, 'deleteListing'])->middleware('token.verify');
+Route::post('updateListing/{id}', [ListingController::class, 'updateListing'])->middleware('token.verify');
 
