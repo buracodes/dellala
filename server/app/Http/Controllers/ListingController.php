@@ -22,7 +22,7 @@ class ListingController extends Controller
     }
 
 
-    public function getlistings(Request $request, $id)
+    public function showListings(Request $request, $id)
     {
     $user = User::find($id); // Use find() to look up the user by ID.
 
@@ -89,6 +89,21 @@ public function deleteListing(Request $request, $id)
         return response()->json(['error' => $error->getMessage()], 500);
     }
 }
+
+public function getListing(Request $request, $id)
+    {
+        try {
+            $listing = Listing::find($id);
+
+            if (!$listing) {
+                return response()->json(['error' => 'Listing not found!'], 404);
+            }
+
+            return response()->json($listing, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 
 
 

@@ -141,7 +141,7 @@ export default function Profile() {
 const handleShowListings = async () => {
   try {
     setShowListingsError(false);
-    const res = await fetch(`http://localhost:8000/api/getlistings/${currentUser.id}`, {
+    const res = await fetch(`http://localhost:8000/api/show/${currentUser.id}`, {
       method: 'GET',
       credentials: 'include',
     });
@@ -293,7 +293,9 @@ const handleShowListings = async () => {
                 >
                   Delete
                 </button>
-                <button className='text-green-700 uppercase'>Edit</button>
+                <Link to={`/updatelisting/${listing.id}`}>
+                  <button className='text-green-700 uppercase'>Edit</button>
+                </Link>
               </div>
             </div>
           ))}
