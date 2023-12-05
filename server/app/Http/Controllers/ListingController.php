@@ -106,5 +106,24 @@ public function getListing(Request $request, $id)
     }
 
 
+    public function getUser($id)
+    {
+        try {
+            $user = User::find($id);
+
+            if (!$user) {
+                return response()->json(['error' => 'User not found!'], 404);
+            }
+
+            $rest = $user->toArray();
+            unset($rest['password']);
+
+            return response()->json($rest);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+
 
 }

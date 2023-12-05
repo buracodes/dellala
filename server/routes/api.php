@@ -33,4 +33,4 @@ Route::get('show/{id}', [ListingController::class, 'showListings'])->middleware(
 Route::delete('deleteListing/{id}', [ListingController::class, 'deleteListing'])->middleware('token.verify');
 Route::post('updateListing/{id}', [ListingController::class, 'updateListing'])->middleware('token.verify');
 Route::get('get/{id}', [ListingController::class, 'getListing']);
-
+Route::get('/{id}', [ListingController::class, 'getUser'])->middleware('token.verify');
