@@ -125,5 +125,54 @@ public function getListing(Request $request, $id)
     }
 
 
+    public function searchListings(Request $request)
+  {
+    try {
+        $limit = $request->query('limit', 9);
+        $startIndex = $request->query('startIndex', 0);
+        $offer = $request->query('offer', null);
+
+        if ($offer === null || $offer === 'false') {
+            $offer = [false, true];
+        }
+
+        $furnished = $request->query('furnished', null);
+
+        if ($furnished === null || $furnished === 'false') {
+            $furnished = [false, true];
+        }
+
+        $parking = $request->query('parking', null);
+
+        if ($parking === null || $parking === 'false') {
+            $parking = [false, true];
+        }
+
+        $type = $request->query('type', null);
+
+        if ($type === null || $type === 'all') {
+            $type = ['sale', 'rent'];
+        }
+
+        $searchTerm = $request->query('searchTerm', '');
+        $sort = $request->query('sort', 'created_At');
+        $order = $request->query('order', 'desc');
+
+        $listings = Listing::query()
+            ->where('name', 'like', '%' . $searchTerm . '%')
+            ->whereIn('offer', $offer)
+            ->whereIn('furnished', $furnished)
+            ->whereIn('parking', $parking)
+            ->whereIn('type', $type)
+            ->orderBy($sort, $order)
+            ->limit($limit)
+            ->offset($startIndex)
+            ->get();
+
+        return response()->json($listings, 200);
+    } catch (\Exception $e) {
+        return response()->json(['message' => $e->getMessage()], 500);
+    }
+}
 
 }
