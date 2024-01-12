@@ -35,7 +35,7 @@ Route::post('updateListing/{id}', [ListingController::class, 'updateListing'])->
 Route::get('get/{id}', [ListingController::class, 'getListing']);
 Route::get('/{id}', [ListingController::class, 'getUser'])->middleware('token.verify');
 
-Route::get('/listings/search', [ListingController::class, 'searchListings']);
+Route::get('/listings/get', [ListingController::class, 'searchListings']);
 
 
 
