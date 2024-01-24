@@ -126,7 +126,7 @@ public function getListing(Request $request, $id)
 
 
     public function searchListings(Request $request)
-  {
+{
     try {
         $limit = $request->query('limit', 9);
         $startIndex = $request->query('startIndex', 0);
@@ -134,24 +134,32 @@ public function getListing(Request $request, $id)
 
         if ($offer === null || $offer === 'false') {
             $offer = [false, true];
+        } else {
+            $offer = explode(',', $offer); // Convert to array
         }
 
         $furnished = $request->query('furnished', null);
 
         if ($furnished === null || $furnished === 'false') {
             $furnished = [false, true];
+        } else {
+            $furnished = explode(',', $furnished); // Convert to array
         }
 
         $parking = $request->query('parking', null);
 
         if ($parking === null || $parking === 'false') {
             $parking = [false, true];
+        } else {
+            $parking = explode(',', $parking); // Convert to array
         }
 
         $type = $request->query('type', null);
 
         if ($type === null || $type === 'all') {
             $type = ['sale', 'rent'];
+        } else {
+            $type = explode(',', $type); // Convert to array
         }
 
         $searchTerm = $request->query('searchTerm', '');

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { MdLocationOn } from 'react-icons/md';
 import PropTypes from 'prop-types';
+
 export default function ListingItem({ listing }) {
     ListingItem.propTypes = {
         listing: PropTypes.object.isRequired,

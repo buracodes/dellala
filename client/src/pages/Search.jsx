@@ -11,13 +11,14 @@ export default function Search() {
     parking: false,
     furnished: false,
     offer: false,
-    sort: 'created_at',
+    sort: 'created_At',
     order: 'desc',
   });
 
   const [loading, setLoading] = useState(false);
   const [listings, setListings] = useState([]);
   const [showMore, setShowMore] = useState(false);
+  
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
@@ -65,9 +66,9 @@ export default function Search() {
     };
 
     fetchListings();
-  }, []);
+  }, [location.search]);
 
-//   console.log(setSidebardata);
+
   const handleChange = (e) => {
     if (
       e.target.id === 'all' ||
@@ -94,14 +95,14 @@ export default function Search() {
     }
 
     if (e.target.id === 'sort_order') {
-      const sort = e.target.value.split('_')[0] || 'created_at';
+      const sort = e.target.value.split(',')[0] || 'created_At';
 
-      const order = e.target.value.split('_')[1] || 'desc';
+      const order = e.target.value.split(',')[1] || 'desc';
 
       setSidebardata({ ...sidebardata, sort, order });
     }
   };
-
+   
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -218,14 +219,14 @@ export default function Search() {
               <label className='font-semibold'>Sort:</label>
               <select
               onChange={handleChange}
-              defaultValue={'created_at_desc'}
+              defaultValue={'created_At,desc'}
               id='sort_order'
               className='border rounded-lg p-3'
             >
-              <option value='regularPrice_desc'>Price high to low</option>
-              <option value='regularPrice_asc'>Price low to hight</option>
-              <option value='createdAt_desc'>Latest</option>
-              <option value='createdAt_asc'>Oldest</option>
+              <option value='regularPrice,desc'>Price high to low</option>
+              <option value='regularPrice,asc'>Price low to hight</option>
+              <option value='created_At,desc'>Latest</option>
+              <option value='created_At,asc'>Oldest</option>
             </select>
             </div>
             <button className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95'>
@@ -248,11 +249,13 @@ export default function Search() {
             </p>
           )}
 
-          {!loading &&
-            listings &&
-            listings.map((listing) => (
-              <ListingItem key={listing.id} listing={listing} />
-            ))}
+
+           {!loading &&
+             Array.isArray(listings) &&
+             listings.map((listing) => (
+             <ListingItem key={listing.id} listing={listing} />
+            ))
+            } 
 
             {showMore && (
             <button
