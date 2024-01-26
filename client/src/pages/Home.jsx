@@ -11,7 +11,7 @@ export default function Home() {
   useEffect(() => {
     const fetchOfferListings = async () => {
       try {
-        const res = await fetch('http://localhost:8000/api/listings/get?offer=true&limit=4');
+        const res = await fetch('http://localhost:8000/api/listings/get?offer=true&limit=6');
         const data = await res.json();
         setOfferListings(data);
         fetchRentListings();
@@ -21,7 +21,7 @@ export default function Home() {
     };
     const fetchRentListings = async () => {
       try {
-        const res = await fetch('http://localhost:8000/api/listings/get?type=rent&limit=4');
+        const res = await fetch('http://localhost:8000/api/listings/get?type=rent&limit=6');
         const data = await res.json();
         setRentListings(data);
         fetchSaleListings();
@@ -32,7 +32,7 @@ export default function Home() {
 
     const fetchSaleListings = async () => {
       try {
-        const res = await fetch('http://localhost:8000/api/listings/get?type=sale&limit=4');
+        const res = await fetch('http://localhost:8000/api/listings/get?type=sale&limit=6');
         const data = await res.json();
         setSaleListings(data);
       } catch (error) {
@@ -64,7 +64,7 @@ export default function Home() {
               </div>
               <div className='relative p-4'>
                 <h3 className='absolute z-10 top-[50%] left-[50%] translate-y-[-50%] text-white text-2xl font-bold'>Sell</h3>
-                 <img src="https://modern.b-cdn.net/wp-content/uploads/2017/06/exterior-05.jpg"
+                 <img src="https://modern.b-cdn.net/wp-content/uploads/2020/06/exterior-00-1240x720.jpg"
                  className='w-full h-full object-cover relative border-4 border-white shodow-lg duration-300 ease-in-out hover:scale-110'/>
               </div>
               <div className='relative p-4'>
