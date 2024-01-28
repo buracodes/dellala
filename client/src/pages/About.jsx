@@ -4,7 +4,7 @@ export default function About() {
       {/* top */}
       <div className="w-full h-72 relative">
         <img
-          src="https://modern.b-cdn.net/wp-content/uploads/2017/06/living-01.jpg"
+          src="https://cdn.pixabay.com/photo/2017/02/07/18/16/living-room-2046668_1280.jpg"
           alt="image"
           className="w-full h-full object-cover"
         />

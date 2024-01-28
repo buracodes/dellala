@@ -59,7 +59,7 @@ export default function Home() {
           <div className='max-w-[1140px] m-auto w-full md:flex mt-[-75px]'>
              <div className='relative p-4'>
                 <h3 className='absolute z-10 top-[50%] left-[50%] translate-y-[-50%] text-white text-3xl font-bold'>Buy</h3>
-                <img src="https://modern.b-cdn.net/wp-content/uploads/2017/06/exterior-04-1240x720.jpg"
+                <img src="https://cdn.pixabay.com/photo/2017/01/25/19/34/home-2008825_1280.jpg"
                 className='w-full h-full object-cover relative border-4 border-white shodow-lg duration-300 ease-in-out hover:scale-110'/>
               </div>
               <div className='relative p-4'>
