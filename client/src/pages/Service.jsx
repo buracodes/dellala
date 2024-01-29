@@ -3,14 +3,15 @@
 export default function Service() {
   return (
     <div>
-      <div className="w-full h-60 relative">
+      <div className="w-full h-72 relative">
         <img
           src="https://modern.b-cdn.net/wp-content/uploads/2017/06/dining-00-1240x720.jpg"
           alt="image"
           className="w-full h-full object-cover brightness-50"
         />
-        <div className="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center text-white">
+        <div className="absolute top-0 left-0 w-full h-full flex flex-col ml-32 justify-center text-white">
            <h2 className="text-4xl font-bold">Service</h2>
+           <h2 className="text-xl font-bold mt-5">Online Delala {">"} Service</h2>
          </div>
       </div>
 

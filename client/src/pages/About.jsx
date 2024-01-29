@@ -8,8 +8,9 @@ export default function About() {
           alt="image"
           className="w-full h-full object-cover brightness-50"
         />
-        <div className="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center text-white">
+        <div className="absolute top-0 left-0 w-full h-full flex flex-col ml-32 justify-center text-white">
            <h2 className="text-4xl font-bold">About</h2>
+           <h2 className="text-xl font-bold mt-4">OnlineDelala {">"} About</h2>
         </div>
       </div>
 
