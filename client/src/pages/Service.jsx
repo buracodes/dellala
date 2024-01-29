@@ -7,8 +7,11 @@ export default function Service() {
         <img
           src="https://modern.b-cdn.net/wp-content/uploads/2017/06/dining-00-1240x720.jpg"
           alt="image"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover brightness-50"
         />
+        <div className="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center text-white">
+           <h2 className="text-4xl font-bold">Service</h2>
+         </div>
       </div>
 
       <div className="mb-20">

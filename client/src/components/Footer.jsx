@@ -37,9 +37,9 @@ export default function Footer() {
                               </a>
                             </div>
                             <div className="mt-4">
-                               <h4 className='font-semibold text-2xl'>Contact Me</h4>
+                               <h4 className='font-semibold text-xl'>Contact Me</h4>
                                <div className='mt-4 flex items-center'>
-                                  <FaPhone className='text-2xl' />
+                                  <FaPhone className='text-xl' />
                                   <h4 className='font-semibold text-xl ml-2'>+25 19 11 35 62 86</h4>
                                </div>
                             </div>
