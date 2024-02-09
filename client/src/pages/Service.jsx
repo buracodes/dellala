@@ -2,7 +2,7 @@
 
 export default function Service() {
   return (
-    <div>
+    <div className="overflow-x-hidden">
       <div className="w-full h-72 relative">
         <img
           src="https://modern.b-cdn.net/wp-content/uploads/2017/06/dining-00-1240x720.jpg"

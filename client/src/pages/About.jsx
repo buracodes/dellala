@@ -1,6 +1,6 @@
 export default function About() {
   return (
-    <div>
+    <div className="overflow-x-hidden">
       {/* top */}
       <div className="w-full h-72 relative">
         <img
