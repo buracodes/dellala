@@ -112,15 +112,28 @@ public function getListing(Request $request, $id)
             $user = User::find($id);
 
             if (!$user) {
-                return response()->json(['error' => 'User not found!'], 404);
+                return response()->json([
+                    'success' => false,
+                    'statusCode' => 404,
+                    'message' => 'User not found!',
+                ], 404);
             }
 
+            // Remove sensitive data (e.g., password) from the response
             $rest = $user->toArray();
             unset($rest['password']);
 
-            return response()->json($rest);
+            return response()->json([
+                'success' => true,
+                'statusCode' => 200,
+                'data' => $rest,
+            ]);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json([
+                'success' => false,
+                'statusCode' => 500,
+                'message' => $e->getMessage(),
+            ], 500);
         }
     }
 
